@@ -5,8 +5,10 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.pkl
-*.joblib
+
+# DO NOT IGNORE PKL FILES (model is required for deployment)
+# *.pkl     <-- removed
+# *.joblib <-- removed
 
 # Virtual environments
 .venv/
@@ -28,26 +30,19 @@ build/
 # -------------------------
 # DATA & MODEL FILES
 # -------------------------
-# Keep ONLY these:
-#   data/creditcard.csv  (because project requires it)
-#   model/model.pkl      (model needed for prediction)
-#   model/scaler.pkl     (if present)
-#
-# Ignore everything else under data/model except required files
-
-# Ignore any extra datasets
+# Ignore all CSV datasets
 data/*.csv
-!data/creditcard.csv     # allow main dataset
 
-# Ignore extra model dumps
+# Allow empty folder placeholder
+!data/.gitkeep
+
+# Model folder — keep model.pkl
 model/*
-!model/model.pkl         # keep final XGBoost model
-!model/scaler.pkl        # keep scaler only if needed
+!model/model.pkl
 
 # -------------------------
 # FRONTEND
 # -------------------------
-# Node modules (if frontend was ever expanded)
 node_modules/
 
 # -------------------------
@@ -71,5 +66,3 @@ Thumbs.db
 # -------------------------
 docker-compose.yml
 *.tar
-data/creditcard.csv
-data/creditcard.csv
