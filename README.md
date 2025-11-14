@@ -195,7 +195,7 @@ Root directory: /
 
 Render will give a URL like:
 
-https://your-fraud-app.onrender.com/
+🔗 https://credit-card-fraud-detection-1nll.onrender.com/
 
 
 Frontend uses relative paths → works automatically without modification.
