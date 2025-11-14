@@ -24,8 +24,8 @@ COPY app/ app/
 COPY src/ src/
 COPY model/ model/
 COPY frontend/ frontend/
-COPY data/ data/
 
+RUN mkdir -p data
 # -----------------------------
 # 5. Install Python packages
 # -----------------------------
