@@ -1,0 +1,79 @@
+# ==============================
+# PYTHON BUILD ARTIFACTS
+# ==============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.joblib
+*.egg-info/
+.eggs/
+
+# ==============================
+# VIRTUAL ENVIRONMENTS
+# ==============================
+.venv/
+venv/
+env/
+
+# ==============================
+# SYSTEM & TEMP FILES
+# ==============================
+.DS_Store
+Thumbs.db
+*.swp
+*.log
+*.tmp
+tmp/
+logs/
+
+# ==============================
+# JUPYTER
+# ==============================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+notebook/
+*.ipynb
+
+# ==============================
+# RAW DATA — large datasets
+# ==============================
+data/*
+!data/creditcard.csv   # keep ONLY the main dataset
+
+# ==============================
+# MODEL FILES
+# (Include only the deployed models)
+# ==============================
+model/*
+!model/model.pkl
+!model/scaler.pkl
+
+# ==============================
+# FRONTEND EXCLUSIONS
+# ==============================
+# If React/Vite/Node expands later, prevent node_modules bloat
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ==============================
+# GIT & DOCS
+# ==============================
+.git/
+.gitignore
+README.md
+
+# ==============================
+# BUNDLE & ARCHIVES
+# ==============================
+*.zip
+*.tar
+*.tar.gz
+
+# ==============================
+# DOCKER & COMPOSE (not needed inside container)
+# ==============================
+docker-compose.yml
+Dockerfile

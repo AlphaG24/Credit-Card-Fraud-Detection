@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Credit Card Fraud Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b0f19;
+      --card:#141a2a;
+      --line:#1f273a;
+      --accent:#3b82f6;
+      --accent2:#60a5fa;
+      --text:#e2e8f0;
+      --subtext:#94a3b8;
+      --green:#16a34a;
+      --red:#ef4444;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+    body{
+      background:var(--bg);
+      padding:32px;
+      color:var(--text);
+    }
+    .wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+
+    header h1{font-size:24px;font-weight:800;color:var(--text)}
+    header p{color:var(--subtext);font-size:13px;margin-top:6px}
+
+    .container{display:flex;gap:24px;flex-wrap:wrap}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:22px;
+    }
+    .left{flex:1;min-width:350px}
+    .right{width:420px}
+
+    label{display:block;font-size:13px;font-weight:600;margin-top:12px;margin-bottom:6px;color:var(--subtext)}
+    input[type="number"], input[type="file"]{
+      width:100%;padding:11px;border-radius:10px;border:1px solid #2b3247;background:#0e1422;color:var(--text);
+      outline:none;font-size:14px;
+    }
+    input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(59,130,246,0.25)}
+
+    .btn{
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      color:#fff;width:100%;padding:12px;font-weight:700;font-size:15px;border-radius:10px;border:0;cursor:pointer;
+      margin-top:16px;
+    }
+    .btn:active{transform:scale(.98)}
+
+    .muted{color:var(--subtext);font-size:12px;margin-top:8px}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+
+    /* Result */
+    #resultPanel{text-align:center}
+    .circle-wrap{width:200px;height:200px;margin:16px auto;position:relative}
+    .circle{width:100%;height:100%;border-radius:50%;transition:.5s}
+    .circle-inner{
+      position:absolute;inset:20px;background:#0e1422;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:var(--text)
+    }
+
+    .result-title{margin-top:14px;font-size:18px;font-weight:800}
+    .reason-box{
+      background:#0e1422;border-left:4px solid var(--accent);padding:14px;
+      margin-top:20px;border-radius:10px;font-size:13px;color:var(--text);
+    }
+
+    table{width:100%;margin-top:14px;border-collapse:collapse;color:var(--text);font-size:13px}
+    table th{color:var(--subtext);font-weight:600;text-align:left;padding-bottom:6px}
+    table td{padding:6px 0;border-bottom:1px solid var(--line)}
+
+    @media(max-width:900px){.right{width:100%}}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Credit Card Fraud Detection — Dark</h1>
+        <p>Enter a transaction or upload a CSV (Time, V1..V28, Amount)</p>
+      </div>
+    </header>
+
+    <div class="container">
+
+      <!-- LEFT: INPUT -->
+      <div class="card left">
+        <h2 style="font-size:20px;margin-bottom:10px">Single Transaction</h2>
+
+        <label>Time</label>
+        <input id="Time" type="number" placeholder="150000" />
+
+        <label>Amount</label>
+        <input id="Amount" type="number" placeholder="2000" />
+
+        <button id="toggleAdv" class="btn" style="margin-top:12px;background:#2b3247">Show / Hide V1–V28</button>
+
+        <div id="advanced" style="display:none">
+          <div class="grid" id="feature-grid"></div>
+        </div>
+
+        <button id="runBtn" class="btn">Run Analysis</button>
+        <p class="muted">Tip: most users do not modify V1–V28.</p>
+      </div>
+
+      <!-- RIGHT: RESULT -->
+      <div class="card right">
+        <h2 style="font-size:20px;margin-bottom:10px">Result</h2>
+
+        <div id="placeholder" style="text-align:center;padding:32px;color:var(--subtext)">
+          <div style="font-size:70px">—</div>
+          <div>Run analysis to view output</div>
+        </div>
+
+        <div id="resultPanel" style="display:none">
+          <div class="circle-wrap">
+            <div id="riskCircle" class="circle"></div>
+            <div id="riskValue" class="circle-inner">0%</div>
+          </div>
+
+          <div id="label" class="result-title"></div>
+          <div id="probText" style="color:var(--subtext);margin-top:8px;font-size:13px"></div>
+
+          <div id="reasons" class="reason-box" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BULK -->
+    <div class="card">
+      <h2 style="font-size:20px;margin-bottom:10px">Bulk CSV Analysis</h2>
+
+      <input id="csvFile" type="file" accept=".csv" />
+      <button id="bulkBtn" class="btn" style="width:auto;margin-top:10px">Process CSV</button>
+
+      <div id="bulkResult" style="margin-top:16px"></div>
+    </div>
+  </div>
+
+
+<script>
+/* Create V1..V28 inputs */
+const grid = document.getElementById("feature-grid");
+for(let i=1;i<=28;i++){
+  grid.innerHTML += `<div><label>V${i}</label><input id="V${i}" type="number" /></div>`;
+}
+
+document.getElementById("toggleAdv").onclick = () => {
+  const adv = document.getElementById("advanced");
+  adv.style.display = adv.style.display === "none" ? "block" : "none";
+};
+
+/* Single Prediction */
+document.getElementById("runBtn").onclick = async () => {
+  const btn = document.getElementById("runBtn");
+  btn.disabled = true; btn.textContent = "Analyzing...";
+
+  const f = {};
+  f["Time"] = Number(Time.value)||0;
+  f["Amount"] = Number(Amount.value)||0;
+  for(let i=1;i<=28;i++){
+    const v = Number(document.getElementById("V"+i).value);
+    f["V"+i] = isNaN(v) ? 0 : v;
+  }
+
+  try{
+    const res = await fetch("/predict", {
+      method:"POST", headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({features:f})
+    });
+
+    const data = await res.json();
+    renderResult(data);
+  } catch(e){
+    alert("Error: "+e.message);
+  }
+
+  btn.disabled = false; btn.textContent = "Run Analysis";
+};
+
+/* Render result */
+function renderResult(data){
+  document.getElementById("placeholder").style.display="none";
+  document.getElementById("resultPanel").style.display="block";
+
+  const pct = data.probability * 100;
+  const riskColor = pct>=50 ? "var(--red)" : "var(--green)";
+  document.getElementById("riskCircle").style.background =
+      `conic-gradient(${riskColor} ${pct*3.6}deg,#2b3247 ${pct*3.6}deg)`;
+
+  document.getElementById("riskValue").textContent = pct.toFixed(1)+"%";
+  document.getElementById("label").textContent =
+      data.prediction ? "⚠ FRAUD" : "✔ NOT FRAUD";
+  document.getElementById("label").style.color = riskColor;
+
+  document.getElementById("probText").textContent =
+      `Model Probability: ${data.probability.toFixed(6)}`;
+
+  // reasons
+  const r = document.getElementById("reasons");
+  let html = "<strong>Top 3 Features</strong><br>";
+  data.top_features.slice(0,3).forEach((f,i)=>{
+    html += `${i+1}. ${f.feature}: ${Number(f.value).toFixed(4)}<br>`;
+  });
+  r.innerHTML = html;
+  r.style.display = "block";
+}
+
+
+/* Bulk CSV */
+document.getElementById("bulkBtn").onclick = async ()=>{
+  const f = csvFile.files[0];
+  if(!f){ alert("Select CSV"); return; }
+
+  const fd = new FormData();
+  fd.append("file",f);
+
+  bulkBtn.textContent="Processing...";
+  bulkBtn.disabled=true;
+
+  try{
+    const res = await fetch("/bulk_predict",{method:"POST",body:fd});
+    const data = await res.json();
+
+    let html=`<table><tr><th>#</th><th>Prediction</th><th>Probability</th></tr>`;
+    data.results.forEach((r,i)=>{
+      html+=`<tr><td>${i+1}</td><td>${r.prediction}</td><td>${r.probability.toFixed(6)}</td></tr>`;
+    });
+    html+=`</table><br><a class="btn" href="${data.csv_download}" style="width:auto">Download Results</a>`;
+    bulkResult.innerHTML=html;
+
+  }catch(e){
+    alert("Bulk error: "+e.message);
+  }
+
+  bulkBtn.disabled=false;
+  bulkBtn.textContent="Process CSV";
+};
+</script>
+
+</body>
+</html>

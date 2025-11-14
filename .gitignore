@@ -1,0 +1,73 @@
+# -------------------------
+# PYTHON
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.joblib
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Local build / cache
+*.DS_Store
+*.egg-info/
+.eggs/
+.cache/
+dist/
+build/
+
+# -------------------------
+# DATA & MODEL FILES
+# -------------------------
+# Keep ONLY these:
+#   data/creditcard.csv  (because project requires it)
+#   model/model.pkl      (model needed for prediction)
+#   model/scaler.pkl     (if present)
+#
+# Ignore everything else under data/model except required files
+
+# Ignore any extra datasets
+data/*.csv
+!data/creditcard.csv     # allow main dataset
+
+# Ignore extra model dumps
+model/*
+!model/model.pkl         # keep final XGBoost model
+!model/scaler.pkl        # keep scaler only if needed
+
+# -------------------------
+# FRONTEND
+# -------------------------
+# Node modules (if frontend was ever expanded)
+node_modules/
+
+# -------------------------
+# LOGS & TEMP FILES
+# -------------------------
+*.log
+*.tmp
+tmp/
+logs/
+*.sqlite
+*.db
+
+# -------------------------
+# OS-SPECIFIC
+# -------------------------
+Thumbs.db
+*.swp
+
+# -------------------------
+# DOCKER
+# -------------------------
+docker-compose.yml
+*.tar
