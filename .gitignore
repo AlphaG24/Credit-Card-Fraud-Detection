@@ -1,25 +1,32 @@
-# -------------------------
+###############################
 # PYTHON
-# -------------------------
+###############################
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# DO NOT IGNORE PKL FILES (model is required for deployment)
-# *.pkl     <-- removed
-# *.joblib <-- removed
-
 # Virtual environments
 .venv/
-env/
 venv/
+env/
 
-# Jupyter Notebook
+###############################
+# NOTE ABOUT MODEL FILES
+# --------------------------
+# We MUST keep model/model.pkl
+# because it is required for deployment.
+###############################
+
+###############################
+# JUPYTER NOTEBOOK
+###############################
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# Local build / cache
+###############################
+# LOCAL BUILD / CACHE
+###############################
 *.DS_Store
 *.egg-info/
 .eggs/
@@ -27,29 +34,31 @@ venv/
 dist/
 build/
 
-# -------------------------
-# DATA & MODEL FILES
-# -------------------------
-# Ignore all CSV datasets
-data/*.csv
-
-# Allow empty folder placeholder
+###############################
+# DATA FILES
+###############################
+# Ignore all datasets (do not upload on GitHub)
+data/*
+# Keep folder placeholder
 !data/.gitkeep
 
-# Model folder — keep model.pkl
-# Model folder — keep model.pkl
+###############################
+# MODEL FILES
+###############################
 model/*
+# Keep deployed model
 !model/model.pkl
+# Keep folder placeholder
 !model/.gitkeep
 
-# -------------------------
-# FRONTEND
-# -------------------------
+###############################
+# FRONTEND (if expanded later)
+###############################
 node_modules/
 
-# -------------------------
+###############################
 # LOGS & TEMP FILES
-# -------------------------
+###############################
 *.log
 *.tmp
 tmp/
@@ -57,14 +66,14 @@ logs/
 *.sqlite
 *.db
 
-# -------------------------
+###############################
 # OS-SPECIFIC
-# -------------------------
+###############################
 Thumbs.db
 *.swp
 
-# -------------------------
+###############################
 # DOCKER
-# -------------------------
+###############################
 docker-compose.yml
 *.tar
